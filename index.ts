@@ -4,12 +4,14 @@ import json_adam from './public/character/adam.json';
 import q1 from '/public/q1.html';
 import q2 from '/public/q2.html';
 import q3 from '/public/q3.html';
+import q4 from '/public/q4.html';
 import png_tile from '/public/modernexteriors-win/Modern_Exteriors_Complete_Tileset_48x48.png';
 import json_test from '/public/tiles/remap.json';
 import png_lucy from './public/character/lucy.png';
 import json_lucy from './public/character/lucy.json';
 import bench from '/public/chairs/Bench2.png';
 import hidden_coupon from '/public/HiddenEvent/coupon.html';
+import axios from 'axios';
 
 // custom scene class
 export class GameScene extends Phaser.Scene {
@@ -24,6 +26,13 @@ export class GameScene extends Phaser.Scene {
   public coupon!: Phaser.Physics.Arcade.Image;
   public potal!: Phaser.Physics.Arcade.Image;
   public selectedValues: string[] = [];
+  public single: integer[]= [];
+  public multi: integer[]= [];
+  public rpg: integer[]= [];
+  public fps: integer[] = [];
+  public action: integer[]= [];
+
+  
 
   constructor() {
     super('game-scene');
@@ -37,6 +46,7 @@ export class GameScene extends Phaser.Scene {
     this.load.html('q1', q1);
     this.load.html('q2', q2);
     this.load.html('q3', q3);
+    this.load.html('q4', q4);
     this.load.tilemapTiledJSON('testmap', json_test);
     this.load.image('tile', png_tile);
     this.load.image('bench', bench);
@@ -44,6 +54,55 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+
+    
+    const api_key = '3bad6ce02bbd4c3582a41d972f37338f';
+      const base_url = 'https://api.rawg.io/api/';
+      const endpoint = 'games';
+      const resultsPerPage = 10;
+
+
+        axios.get(`${base_url}${endpoint}?key=${api_key}&ordering=-recommendations_count&page_size=${resultsPerPage}&metacritic`)
+        .then((response) => {
+          console.log(response.data);
+          for(var i=0; i<10; i++){
+            for(var j=0; j<10; j++){
+              if(response.data.results[i].tags[j].name=="Singleplayer"){
+                this.single.push(i);
+              }
+              if(response.data.results[i].tags[j].name=="Multiplayer"){
+                this.multi.push(i);
+              }
+              if(response.data.results[i].tags[j].name=="RPG"){
+                this.rpg.push(i);
+              }
+              if(response.data.results[i].tags[j].name=="FPS"){
+                this.fps.push(i);
+              }
+              if(response.data.results[i].tags[j].name=="Action"){
+                this.action.push(i);
+              }
+              console.log("이름:"+ response.data.results[i].slug + response.data.results[i].tags[j].name);
+
+            }
+           
+          }
+
+         console.log(this.single);
+         console.log(this.multi);
+         console.log(this.rpg);
+         console.log(this.fps);
+         console.log(this.action);
+         
+         
+        })
+        .catch((error) => {
+          console.error('API 요청 중 오류 발생:', error);
+        });
+
+          
+      
+
     const map = this.make.tilemap({ key: 'testmap' });
     const tile = map.addTilesetImage(
       'Modern_Exteriors_Complete_Tileset_48x48',
@@ -200,6 +259,82 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.wallFG);
   }
 
+  check_genre(){
+    const result: integer[]= [];
+    console.log(this.selectedValues[0]);
+    if(this.selectedValues[0]=="혼자"&&this.selectedValues[2]=="FPS"){
+      for(var i=0; i<this.fps.length; i++){
+        if(this.single.includes(this.fps[i]))
+        result.push(this.fps[i]);
+      }
+    }
+
+    if(this.selectedValues[0]=="같이"&&this.selectedValues[2]=="FPS"){
+      for(var i=0; i<this.fps.length; i++){
+        if(this.multi.includes(this.fps[i]))
+        result.push(this.fps[i]);
+      }
+    }
+
+    if(this.selectedValues[0]=="혼자"&&this.selectedValues[2]=="RPG"){
+      for(var i=0; i<this.rpg.length; i++){
+        if(this.single.includes(this.rpg[i]))
+        result.push(this.rpg[i]);
+      }
+    }
+
+    if(this.selectedValues[0]=="같이"&&this.selectedValues[2]=="RPG"){
+      for(var i=0; i<this.rpg.length; i++){
+        if(this.multi.includes(this.rpg[i]))
+        result.push(this.rpg[i]);
+      }
+    }
+
+    if(this.selectedValues[0]=="혼자"&&this.selectedValues[2]=="Action"){
+      for(var i=0; i<this.action.length; i++){
+        if(this.single.includes(this.action[i]))
+        result.push(this.action[i]);
+      }
+    }
+
+    if(this.selectedValues[0]=="같이"&&this.selectedValues[2]=="Action"){
+      for(var i=0; i<this.action.length; i++){
+        if(this.multi.includes(this.action[i]))
+        result.push(this.action[i]);
+      }
+    }
+
+    const element4 = this.add
+    .dom(this.player.x,this.player.y+100)
+    .createFromCache('q4');
+
+    const api_key = '3bad6ce02bbd4c3582a41d972f37338f';
+      const base_url = 'https://api.rawg.io/api/';
+      const endpoint = 'games';
+      const resultsPerPage = 10;
+
+
+        axios.get(`${base_url}${endpoint}?key=${api_key}&ordering=-recommendations_count&page_size=${resultsPerPage}&metacritic`)
+        .then((response) => {
+          console.log(response.data);
+          for(var i=0; i<result.length; i++){
+              const image = document.createElement('img');
+              image.src = response.data.results[i].background_image;
+              element4.node.appendChild(image);
+            }
+           
+          }
+
+         
+         
+        )
+        .catch((error) => {
+          console.error('API 요청 중 오류 발생:', error);
+        });
+    
+
+    
+  }
   update(time: number, delta: number): void {
     // game loop
     // console.log(this.player.x);
@@ -278,14 +413,17 @@ export class GameScene extends Phaser.Scene {
 
           button1.addEventListener('click', () => {
             this.selectedValues.push('Action');
+            this.check_genre();
           });
 
           button2.addEventListener('click', () => {
             this.selectedValues.push('FPS');
+            this.check_genre();
           });
 
           button3.addEventListener('click', () => {
             this.selectedValues.push('RPG');
+            this.check_genre();
           });
         }, 4000);
       });
@@ -345,14 +483,17 @@ export class GameScene extends Phaser.Scene {
 
           button1.addEventListener('click', () => {
             this.selectedValues.push('Action');
+            this.check_genre();
           });
 
           button2.addEventListener('click', () => {
             this.selectedValues.push('FPS');
+            this.check_genre();
           });
 
           button3.addEventListener('click', () => {
             this.selectedValues.push('RPG');
+            this.check_genre();
           });
         }, 4000);
       });
