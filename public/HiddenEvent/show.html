@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAWG API Games List with Tags</title>
+    <style>
+      html {
+        font-size: 50px;
+      }
+      img {
+        display: block;
+        height: 1200px;
+        width: 1200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>RAWG API Games List with Tags</h1>
+    <ul id="game-list"></ul>
+
+    <script>
+      const api_key = '3bad6ce02bbd4c3582a41d972f37338f';
+      const base_url = 'https://api.rawg.io/api/';
+      const endpoint = 'games';
+      const gamesPerPage = 20; // 한 페이지당 게임 개수
+      const totalGames = 100; // 가져올 총 게임 개수
+
+      const gameList = document.getElementById('game-list');
+    
+      // 페이지별 API 요청 및 게임 목록 출력
+      function fetchGames(page) {
+        const offset = (page - 1) * gamesPerPage;
+        fetch(`${base_url}${endpoint}?key=${api_key}&page=${page}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const games = data.results;
+            games.forEach((game) => {
+              const gameTitle = game.name;
+              const gameImage = game.background_image;
+              const gameTags = game.tags.map((tag) => tag.name).join(', ');
+              const metacriticScore = game.metacritic;
+              const selectedValues = JSON.parse(localStorage.getItem('selectedValues'));
+              console.log(selectedValues);
+          
+              
+              let listItem = document.createElement('li');
+              const imgElement = document.createElement('img');
+              imgElement.src = gameImage;
+              imgElement.alt = gameTitle;
+
+              listItem.appendChild(imgElement);
+              listItem.appendChild(
+                document.createTextNode(
+                  gameTitle +
+                    ' [' +
+                    gameTags +
+                    '] Metacritic: ' +
+                    metacriticScore
+                )
+              );
+
+              gameList.appendChild(listItem);
+            });
+    
+            if (offset + gamesPerPage < totalGames) {
+              fetchGames(page + 1);
+            }
+          })
+          .catch((error) => {
+            console.error('API 요청 중 오류 발생:', error);
+          });
+      }
+
+      fetchGames(1);
+    </script>
+  </body>
+</html>

@@ -8,7 +8,8 @@ import png_tile from '/public/modernexteriors-win/Modern_Exteriors_Complete_Tile
 import json_test from '/public/tiles/remap.json'
 import png_lucy from './public/character/lucy.png';
 import json_lucy from './public/character/lucy.json';
-
+import bench from '/public/chairs/Bench2.png';
+import hidden_coupon from '/public/HiddenEvent/coupon.html';
 
 // custom scene class
 export class GameScene extends Phaser.Scene {
@@ -20,6 +21,9 @@ export class GameScene extends Phaser.Scene {
     public iscreated!: boolean;
     public iscreated2!: boolean;
     public iscreated3!: boolean;
+    public coupon!: Phaser.Physics.Arcade.Image;
+    public potal! : Phaser.Physics.Arcade.Image;
+    public selectedValues: string[] = [];
 
     constructor() {
         super('game-scene');
@@ -37,7 +41,8 @@ export class GameScene extends Phaser.Scene {
       this.load.html('q3', q3);
       this.load.tilemapTiledJSON('testmap', json_test);
       this.load.image('tile', png_tile);
-
+      this.load.image('bench',bench);
+      this.load.html('coupon',hidden_coupon);
     }
 
     create() {
@@ -59,6 +64,16 @@ export class GameScene extends Phaser.Scene {
           this.wallBG.setCollisionByProperty({collides: true});
           this.wallFG.setCollisionByProperty({collides: true});
 
+
+          this.potal = [
+            this.physics.add.sprite(700, 1540, "bench"),
+            this.physics.add.sprite(1150, 1540, "bench"),
+          ];
+
+          this.coupon = [
+            this.physics.add.sprite(700, 1840, "bench"),
+            this.physics.add.sprite(1150, 1840, "bench"),
+          ];
    
 
 
@@ -197,14 +212,19 @@ export class GameScene extends Phaser.Scene {
       this.physics.add.collider(this.player,this.wallBG);
       this.physics.add.collider(this.player,this.wallFG);
     }
+  
+  
+  
+  
 
     update(time: number, delta: number): void {
       // game loop
-    console.log(this.player.x);
-    console.log(this.player.y);
+    // console.log(this.player.x);
+    // console.log(this.player.y);
       if(this.player.y<2300&&this.iscreated2==false){
         const element2 = this.add.dom(this.player.x, this.player.y)
         .createFromCache('q2');
+
 
         const button1 = document.createElement('button');
         button1.innerText = '짧게';
@@ -222,7 +242,7 @@ export class GameScene extends Phaser.Scene {
 
         button1.addEventListener('click', () => { //짧게 선택시
             element2.destroy();
-           
+            this.selectedValues.push('짧게')
             this.player.anims.play("idle_left",true);
             this.tweens.add({
              targets: this.player,
@@ -232,7 +252,7 @@ export class GameScene extends Phaser.Scene {
              repeatDelay: 500,
              ease: 'linear'
             });
-            
+  
             setTimeout(()=>{
              this.player.anims.play("idle_up",true);
              this.tweens.add({
@@ -272,15 +292,15 @@ export class GameScene extends Phaser.Scene {
                 element3.node.appendChild(button3);
 
                 button1.addEventListener('click', () => {
-
+                  this.selectedValues.push('액션')
                 })
 
                 button2.addEventListener('click', () => {
-
+                  this.selectedValues.push('퍼즐')
                 })
 
                 button3.addEventListener('click', () => {
-
+                  this.selectedValues.push('롤플레이')
                 })
 
             },4000)
@@ -290,7 +310,7 @@ export class GameScene extends Phaser.Scene {
  
          button2.addEventListener('click', () => { //길게 선택시
              element2.destroy();
- 
+             this.selectedValues.push('짧게')
              this.player.anims.play("idle_right",true);
             this.tweens.add({
              targets: this.player,
@@ -341,15 +361,15 @@ export class GameScene extends Phaser.Scene {
                 element3.node.appendChild(button3);
 
                 button1.addEventListener('click', () => {
-
+                  this.selectedValues.push('액션')
                 })
 
                 button2.addEventListener('click', () => {
-
+                  this.selectedValues.push('퍼즐')
                 })
 
                 button3.addEventListener('click', () => {
-
+                  this.selectedValues.push('롤플레이')
                 })
             },4000)
          });
@@ -378,7 +398,7 @@ export class GameScene extends Phaser.Scene {
         
         button1.addEventListener('click', () => { //혼자선택시
            element1.destroy();
-          
+           this.selectedValues.push('혼자')
            this.player.anims.play("idle_left",true);
            this.tweens.add({
             targets: this.player,
@@ -406,7 +426,7 @@ export class GameScene extends Phaser.Scene {
 
         button2.addEventListener('click', () => { //게임은 같이 선택시
             element1.destroy();
-
+            this.selectedValues.push('같이')
             this.player.anims.play("idle_right",true);
            this.tweens.add({
             targets: this.player,
@@ -429,32 +449,71 @@ export class GameScene extends Phaser.Scene {
                });
            },2000)
         });
-
-        
-        
         this.iscreated=true;
       }
-
+      localStorage.setItem('selectedValues', JSON.stringify(this.selectedValues));
       this.cameras.main.startFollow(this.player, true);
-      if (this.cursorKeys.left.isDown) {
-        this.player.setVelocityX(-200);
-        this.player.anims.play('idle_left',true)
-      } else if (this.cursorKeys.right.isDown) {
-        this.player.setVelocityX(200);
-        this.player.anims.play('idle_right',true)
-      } else {
-        this.player.setVelocityX(0);
-      }
-      if (this.cursorKeys.up.isDown) {
-        this.player.setVelocityY(-200);
-        this.player.anims.play('idle_up',true)
+      if (this.cursorKeys.up.isDown && this.cursorKeys.right.isDown) {
+        this.player.setVelocityY(-100);
+        this.player.anims.play('idle_right', true);
+      } else if (this.cursorKeys.down.isDown && this.cursorKeys.right.isDown) {
+        this.player.setVelocityY(100);
+        this.player.anims.play('idle_right', true);
+      } else if (this.cursorKeys.up.isDown && this.cursorKeys.left.isDown) {
+        this.player.setVelocityY(-100);
+        this.player.anims.play('idle_left', true);
+      } else if (this.cursorKeys.down.isDown && this.cursorKeys.left.isDown) {
+        this.player.setVelocityY(100);
+        this.player.anims.play('idle_left', true);
+      } else if (this.cursorKeys.up.isDown) {
+        this.player.setVelocityY(-600);
+        this.player.anims.play('idle_up', true);
       } else if (this.cursorKeys.down.isDown) {
         this.player.setVelocityY(200);
-        this.player.anims.play('idle_down',true)
+        this.player.anims.play('idle_down', true);
       } else {
         this.player.setVelocityY(0);
       }
+      if (this.cursorKeys.left.isDown) {
+        this.player.setVelocityX(-200);
+        this.player.anims.play('idle_left', true);
+      } else if (this.cursorKeys.right.isDown) {
+        this.player.setVelocityX(200);
+        this.player.anims.play('idle_right', true);
+      } else {
+        this.player.setVelocityX(0);
+      }
 
+
+      const checkDownKey = (key) =>
+      this.input.keyboard?.checkDown(this.input.keyboard.addKey(key), 99999);
+
+  this.physics.add.overlap(this.player,this.coupon,()=>{
+    if(checkDownKey('E')){
+      // this.player.setPosition(200,200);
+      const element1 = this.add
+      .dom(this.player.x + 50,this.player.y + 50)
+      .createFromCache('coupon');
+      const deleteButton = document.createElement('button');
+      deleteButton.innerText = 'X';
+      deleteButton.style.position = 'absolute';
+      deleteButton.style.top = '30px';
+      deleteButton.style.right = '10px';
+      deleteButton.style.fontSize = '20px';
+      deleteButton.style.cursor = 'pointer';
+      element1.node.appendChild(deleteButton)
+      deleteButton.addEventListener('click',()=>{
+        element1.destroy();
+      })
+    }
+  });
+
+
+  this.physics.add.overlap(this.player,this.potal,()=>{
+    if(checkDownKey('E')){
+      this.player.setPosition(200,200);
+    }
+  });
     }
 }
 
