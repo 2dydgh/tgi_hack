@@ -9,7 +9,8 @@ import png_tile from '/public/modernexteriors-win/Modern_Exteriors_Complete_Tile
 import json_test from '/public/tiles/remap.json';
 import png_lucy from './public/character/lucy.png';
 import json_lucy from './public/character/lucy.json';
-import bench from '/public/chairs/Bench2.png';
+import coupon from '/public/items/Coupon.png';
+import potal from '/public/items/Potal.png';
 import hidden_coupon from '/public/HiddenEvent/coupon.html';
 import axios from 'axios';
 import reset from '/public/reset.png';
@@ -49,7 +50,8 @@ export class GameScene extends Phaser.Scene {
     this.load.html('q4', q4);
     this.load.tilemapTiledJSON('testmap', json_test);
     this.load.image('tile', png_tile);
-    this.load.image('bench', bench);
+    this.load.image('bench',potal);
+    this.load.image('coupon',coupon);
     this.load.html('coupon', hidden_coupon);
   }
 
@@ -172,14 +174,14 @@ export class GameScene extends Phaser.Scene {
     this.wallBG.setCollisionByProperty({ collides: true });
     this.wallFG.setCollisionByProperty({ collides: true });
 
-    this.potal = [
-      this.physics.add.sprite(700, 1540, 'bench'),
-      this.physics.add.sprite(1150, 1540, 'bench'),
+    this.coupon = [
+      this.physics.add.staticSprite(600, 1800, "coupon"),
+      this.physics.add.staticSprite(1030, 1800, "coupon"),
     ];
 
-    this.coupon = [
-      this.physics.add.sprite(700, 1840, 'bench'),
-      this.physics.add.sprite(1150, 1840, 'bench'),
+    this.potal = [
+      this.physics.add.staticSprite(700, 1720, "bench"),
+      this.physics.add.staticSprite(1130, 1720, "bench"),
     ];
 
     const frameRate = 10;
@@ -613,14 +615,14 @@ export class GameScene extends Phaser.Scene {
         .createFromCache('q1');
 
       const button1 = document.createElement('button');
-      button1.innerText = 'Singleplayer가좋아😳';
+      button1.innerText = '싱글 플레이어😳';
       button1.style.width = '150px';
       button1.style.height = '50px';
       button1.style.fontSize = '18px';
       element1.node.appendChild(button1);
 
       const button2 = document.createElement('button');
-      button2.innerText = '게임은multiplayer😆';
+      button2.innerText = '멀티 플레이어😆';
       button2.style.width = '150px';
       button2.style.height = '50px';
       button2.style.fontSize = '18px';
