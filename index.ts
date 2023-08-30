@@ -12,6 +12,8 @@ import json_lucy from './public/character/lucy.json';
 import bench from '/public/chairs/Bench2.png';
 import hidden_coupon from '/public/HiddenEvent/coupon.html';
 import axios from 'axios';
+import reset from '/public/reset.png';
+import quit from '/public/quit.png';
 
 // custom scene class
 export class GameScene extends Phaser.Scene {
@@ -437,20 +439,25 @@ export class GameScene extends Phaser.Scene {
     // game loop
     // console.log(this.player.x);
     // console.log(this.player.y);
+    if (this.player.y < 1600) {
+      this.scene.launch("result-scene");
+      this.scene.pause("game-scene");
+      this.scene.bringToTop("result-scene");
+    }
     if (this.player.y < 2300 && this.iscreated2 == false) {
       const element2 = this.add
         .dom(this.player.x, this.player.y)
         .createFromCache('q2');
 
       const button1 = document.createElement('button');
-      button1.innerText = '짧게';
+      button1.innerText = '짧게🐇';
       button1.style.width = '100px';
       button1.style.height = '50px';
       button1.style.fontSize = '18px';
       element2.node.appendChild(button1);
 
       const button2 = document.createElement('button');
-      button2.innerText = '길게';
+      button2.innerText = '길게🐢';
       button2.style.width = '100px';
       button2.style.height = '50px';
       button2.style.fontSize = '18px';
@@ -606,14 +613,14 @@ export class GameScene extends Phaser.Scene {
         .createFromCache('q1');
 
       const button1 = document.createElement('button');
-      button1.innerText = 'Singleplayer가좋아';
+      button1.innerText = 'Singleplayer가좋아😳';
       button1.style.width = '150px';
       button1.style.height = '50px';
       button1.style.fontSize = '18px';
       element1.node.appendChild(button1);
 
       const button2 = document.createElement('button');
-      button2.innerText = '게임은multiplayer';
+      button2.innerText = '게임은multiplayer😆';
       button2.style.width = '150px';
       button2.style.height = '50px';
       button2.style.fontSize = '18px';
@@ -738,6 +745,84 @@ export class GameScene extends Phaser.Scene {
     });
   }
 }
+export class ResultScene extends Phaser.Scene {
+  constructor() {
+    super("result-scene");
+  }
+  preload() {
+    // 이미지 로드
+    this.load.image('reset',reset);
+    this.load.image('quit',quit);
+
+  }
+  create() {
+    
+    // 결과 화면을 생성하고 원하는 내용을 추가
+    const resultBox = this.add.graphics();
+    const cornerRadius = 0; // 모서리의 둥글기 정도를 조절할 값
+    resultBox.fillStyle(0x000000, 0.8); // 박스의 배경색과 투명도 설정
+    resultBox.fillRoundedRect(
+      this.cameras.main.centerX -390, // 박스의 위치 조정
+      this.cameras.main.centerY - 300,
+      800,
+      600,
+      cornerRadius // 모서리의 둥글기 값 적용
+    );
+
+    const resultText = this.add.text(
+      this.cameras.main.centerX,
+      this.cameras.main.centerY-150, // 박스 위에 위치
+      "게임 장르 탐험 종료",
+      {
+        fontSize: "40px",
+        fill: "#ffffff",
+        padding: { x: 20, y: 10 },
+      }
+    );
+    resultText.setOrigin(0.5);
+
+    // 다시하기 버튼 생성 (이미지 버튼)
+    const restartButton = this.add
+      .image(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY , // 박스 내부에서의 위치 조정
+        "reset"
+      )
+      .setOrigin(0.5)
+      .setInteractive();
+// 다시하기 버튼에 호버 기능 추가
+restartButton.on("pointerover", () => {
+  restartButton.setScale(1.2); // 버튼 크기 조정
+});
+
+restartButton.on("pointerout", () => {
+  restartButton.setScale(1); // 버튼 크기 원래대로
+});
+    restartButton.on("pointerdown", () => {
+      // 다시하기 버튼 클릭 시 게임을 다시 시작
+      this.scene.start("game-scene");
+    });
+  
+      // 종료 버튼 생성 (이미지 버튼)F
+      const exitButton = this.add.image(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY + 150, // 다시하기 버튼 아래에 위치
+        "quit"
+      )
+      .setOrigin(0.5)
+      .setInteractive();
+      exitButton.on("pointerover", () => {
+        exitButton.setScale(1.2); // 버튼 크기 조정
+      });
+      exitButton.on("pointerout", () => {
+        exitButton.setScale(1); // 버튼 크기 원래대로
+      }); 
+    exitButton.on("pointerdown", () => {
+      // 종료 버튼 클릭 시 브라우저 탭을 닫음
+      window.close();
+    });
+  }
+}
 
 // game config
 const config: Phaser.Types.Core.GameConfig = {
@@ -754,7 +839,7 @@ const config: Phaser.Types.Core.GameConfig = {
   dom: {
     createContainer: true,
   },
-  scene: [GameScene],
+  scene: [GameScene,ResultScene],
 };
 
 // instantiate the game
