@@ -384,7 +384,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     const element4 = this.add
-      .dom(this.player.x - 750, this.player.y - 400)
+      .dom(this.player.x - 700, this.player.y - 400)
       .createFromCache('q4');
 
     element4.setOrigin(0.8);
