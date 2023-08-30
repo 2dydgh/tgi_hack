@@ -453,16 +453,20 @@ export class GameScene extends Phaser.Scene {
 
       const button1 = document.createElement('button');
       button1.innerText = '짧게🐇';
-      button1.style.width = '100px';
+      button1.style.width = '403px';
       button1.style.height = '50px';
       button1.style.fontSize = '18px';
+      button1.style.border = '3px black solid';
+      button1.style.borderRadius = '5px'
       element2.node.appendChild(button1);
 
       const button2 = document.createElement('button');
       button2.innerText = '길게🐢';
-      button2.style.width = '100px';
+      button2.style.width = '403px';
       button2.style.height = '50px';
       button2.style.fontSize = '18px';
+      button2.style.border = '3px black solid';
+      button2.style.borderRadius = '5px'
       element2.node.appendChild(button2);
 
       button1.addEventListener('click', () => {
@@ -494,28 +498,34 @@ export class GameScene extends Phaser.Scene {
         setTimeout(() => {
           this.player.anims.play('sit_down', true);
           const element3 = this.add
-            .dom(this.player.x, this.player.y)
+            .dom(this.player.x, this.player.y+100)
             .createFromCache('q3');
 
           const button1 = document.createElement('button');
           button1.innerText = 'Action';
-          button1.style.width = '100px';
+          button1.style.width = '267px';
           button1.style.height = '50px';
           button1.style.fontSize = '18px';
+          button1.style.border = '3px black solid';
+          button1.style.borderRadius = '5px'
           element3.node.appendChild(button1);
 
           const button2 = document.createElement('button');
           button2.innerText = 'FPS';
-          button2.style.width = '100px';
+          button2.style.width = '267px';
           button2.style.height = '50px';
           button2.style.fontSize = '18px';
+          button2.style.border = '3px black solid';
+          button2.style.borderRadius = '5px'
           element3.node.appendChild(button2);
 
           const button3 = document.createElement('button');
           button3.innerText = 'RPG';
-          button3.style.width = '100px';
+          button3.style.width = '267px';
           button3.style.height = '50px';
           button3.style.fontSize = '18px';
+          button3.style.border = '3px black solid';
+          button3.style.borderRadius = '5px'
           element3.node.appendChild(button3);
 
           button1.addEventListener('click', () => {
@@ -564,28 +574,34 @@ export class GameScene extends Phaser.Scene {
         setTimeout(() => {
           this.player.anims.play('sit_down', true);
           const element3 = this.add
-            .dom(this.player.x, this.player.y)
+            .dom(this.player.x, this.player.y+100)
             .createFromCache('q3');
 
           const button1 = document.createElement('button');
           button1.innerText = 'Action';
-          button1.style.width = '100px';
+          button1.style.width = '267px';
           button1.style.height = '50px';
           button1.style.fontSize = '18px';
+          button1.style.border = '3px black solid';
+          button1.style.borderRadius = '5px'
           element3.node.appendChild(button1);
 
           const button2 = document.createElement('button');
           button2.innerText = 'FPS';
-          button2.style.width = '100px';
+          button2.style.width = '267px';
           button2.style.height = '50px';
           button2.style.fontSize = '18px';
+          button2.style.border = '3px black solid';
+          button2.style.borderRadius = '5px'
           element3.node.appendChild(button2);
 
           const button3 = document.createElement('button');
           button3.innerText = 'RPG';
-          button3.style.width = '100px';
+          button3.style.width = '267px';
           button3.style.height = '50px';
           button3.style.fontSize = '18px';
+          button3.style.border = '3px black solid';
+          button3.style.borderRadius = '5px'
           element3.node.appendChild(button3);
 
           button1.addEventListener('click', () => {
@@ -616,16 +632,20 @@ export class GameScene extends Phaser.Scene {
 
       const button1 = document.createElement('button');
       button1.innerText = '싱글 플레이어😳';
-      button1.style.width = '150px';
+      button1.style.width = '403px';
       button1.style.height = '50px';
       button1.style.fontSize = '18px';
+      button1.style.border = '3px black solid';
+      button1.style.borderRadius = '5px'
       element1.node.appendChild(button1);
 
       const button2 = document.createElement('button');
       button2.innerText = '멀티 플레이어😆';
-      button2.style.width = '150px';
+      button2.style.width = '403px';
       button2.style.height = '50px';
       button2.style.fontSize = '18px';
+      button2.style.border = '3px black solid';
+      button2.style.borderRadius = '5px'
       element1.node.appendChild(button2);
 
       button1.addEventListener('click', () => {
@@ -679,7 +699,7 @@ export class GameScene extends Phaser.Scene {
             repeatDelay: 500,
             ease: 'linear',
           });
-          this.createSpeechBubble(1050, 2950, 250, 100, '“반가워”');
+          this.createSpeechBubble(1050, 2950, 250, 100, '“반가워”');``
         }, 2000);
       });
       this.iscreated = true;
