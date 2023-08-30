@@ -26,13 +26,11 @@ export class GameScene extends Phaser.Scene {
   public coupon!: Phaser.Physics.Arcade.Image;
   public potal!: Phaser.Physics.Arcade.Image;
   public selectedValues: string[] = [];
-  public single: integer[]= [];
-  public multi: integer[]= [];
-  public rpg: integer[]= [];
+  public single: integer[] = [];
+  public multi: integer[] = [];
+  public rpg: integer[] = [];
   public fps: integer[] = [];
-  public action: integer[]= [];
-
-  
+  public action: integer[] = [];
 
   constructor() {
     super('game-scene');
@@ -54,54 +52,51 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-
-    
     const api_key = '3bad6ce02bbd4c3582a41d972f37338f';
-      const base_url = 'https://api.rawg.io/api/';
-      const endpoint = 'games';
-      const resultsPerPage = 10;
+    const base_url = 'https://api.rawg.io/api/';
+    const endpoint = 'games';
+    const resultsPerPage = 10;
 
-
-        axios.get(`${base_url}${endpoint}?key=${api_key}&ordering=-recommendations_count&page_size=${resultsPerPage}&metacritic`)
-        .then((response) => {
-          console.log(response.data);
-          for(var i=0; i<10; i++){
-            for(var j=0; j<10; j++){
-              if(response.data.results[i].tags[j].name=="Singleplayer"){
-                this.single.push(i);
-              }
-              if(response.data.results[i].tags[j].name=="Multiplayer"){
-                this.multi.push(i);
-              }
-              if(response.data.results[i].tags[j].name=="RPG"){
-                this.rpg.push(i);
-              }
-              if(response.data.results[i].tags[j].name=="FPS"){
-                this.fps.push(i);
-              }
-              if(response.data.results[i].tags[j].name=="Action"){
-                this.action.push(i);
-              }
-              console.log("이름:"+ response.data.results[i].slug + response.data.results[i].tags[j].name);
-
+    axios
+      .get(
+        `${base_url}${endpoint}?key=${api_key}&ordering=-recommendations_count&page_size=${resultsPerPage}&metacritic`
+      )
+      .then((response) => {
+        console.log(response.data);
+        for (var i = 0; i < 10; i++) {
+          for (var j = 0; j < 10; j++) {
+            if (response.data.results[i].tags[j].name == 'Singleplayer') {
+              this.single.push(i);
             }
-           
+            if (response.data.results[i].tags[j].name == 'Multiplayer') {
+              this.multi.push(i);
+            }
+            if (response.data.results[i].tags[j].name == 'RPG') {
+              this.rpg.push(i);
+            }
+            if (response.data.results[i].tags[j].name == 'FPS') {
+              this.fps.push(i);
+            }
+            if (response.data.results[i].tags[j].name == 'Action') {
+              this.action.push(i);
+            }
+            console.log(
+              '이름:' +
+                response.data.results[i].slug +
+                response.data.results[i].tags[j].name
+            );
           }
+        }
 
-         console.log(this.single);
-         console.log(this.multi);
-         console.log(this.rpg);
-         console.log(this.fps);
-         console.log(this.action);
-         
-         
-        })
-        .catch((error) => {
-          console.error('API 요청 중 오류 발생:', error);
-        });
-
-          
-      
+        console.log(this.single);
+        console.log(this.multi);
+        console.log(this.rpg);
+        console.log(this.fps);
+        console.log(this.action);
+      })
+      .catch((error) => {
+        console.error('API 요청 중 오류 발생:', error);
+      });
 
     const map = this.make.tilemap({ key: 'testmap' });
     const tile = map.addTilesetImage(
@@ -259,81 +254,112 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.wallFG);
   }
 
-  check_genre(){
-    const result: integer[]= [];
+  check_genre() {
+    const result: integer[] = [];
     console.log(this.selectedValues[0]);
-    if(this.selectedValues[0]=="혼자"&&this.selectedValues[2]=="FPS"){
-      for(var i=0; i<this.fps.length; i++){
-        if(this.single.includes(this.fps[i]))
-        result.push(this.fps[i]);
+    if (
+      this.selectedValues[0] == 'Singleplayer' &&
+      this.selectedValues[2] == 'FPS'
+    ) {
+      for (var i = 0; i < this.fps.length; i++) {
+        if (this.single.includes(this.fps[i])) result.push(this.fps[i]);
       }
     }
 
-    if(this.selectedValues[0]=="같이"&&this.selectedValues[2]=="FPS"){
-      for(var i=0; i<this.fps.length; i++){
-        if(this.multi.includes(this.fps[i]))
-        result.push(this.fps[i]);
+    if (
+      this.selectedValues[0] == 'multiplayer' &&
+      this.selectedValues[2] == 'FPS'
+    ) {
+      for (var i = 0; i < this.fps.length; i++) {
+        if (this.multi.includes(this.fps[i])) result.push(this.fps[i]);
       }
     }
 
-    if(this.selectedValues[0]=="혼자"&&this.selectedValues[2]=="RPG"){
-      for(var i=0; i<this.rpg.length; i++){
-        if(this.single.includes(this.rpg[i]))
-        result.push(this.rpg[i]);
+    if (
+      this.selectedValues[0] == 'Singleplayer' &&
+      this.selectedValues[2] == 'RPG'
+    ) {
+      for (var i = 0; i < this.rpg.length; i++) {
+        if (this.single.includes(this.rpg[i])) result.push(this.rpg[i]);
       }
     }
 
-    if(this.selectedValues[0]=="같이"&&this.selectedValues[2]=="RPG"){
-      for(var i=0; i<this.rpg.length; i++){
-        if(this.multi.includes(this.rpg[i]))
-        result.push(this.rpg[i]);
+    if (
+      this.selectedValues[0] == 'multiplayer' &&
+      this.selectedValues[2] == 'RPG'
+    ) {
+      for (var i = 0; i < this.rpg.length; i++) {
+        if (this.multi.includes(this.rpg[i])) result.push(this.rpg[i]);
       }
     }
 
-    if(this.selectedValues[0]=="혼자"&&this.selectedValues[2]=="Action"){
-      for(var i=0; i<this.action.length; i++){
-        if(this.single.includes(this.action[i]))
-        result.push(this.action[i]);
+    if (
+      this.selectedValues[0] == 'Singleplayer' &&
+      this.selectedValues[2] == 'Action'
+    ) {
+      for (var i = 0; i < this.action.length; i++) {
+        if (this.single.includes(this.action[i])) result.push(this.action[i]);
       }
     }
 
-    if(this.selectedValues[0]=="같이"&&this.selectedValues[2]=="Action"){
-      for(var i=0; i<this.action.length; i++){
-        if(this.multi.includes(this.action[i]))
-        result.push(this.action[i]);
+    if (
+      this.selectedValues[0] == 'multiplayer' &&
+      this.selectedValues[2] == 'Action'
+    ) {
+      for (var i = 0; i < this.action.length; i++) {
+        if (this.multi.includes(this.action[i])) result.push(this.action[i]);
       }
     }
 
     const element4 = this.add
-    .dom(this.player.x,this.player.y+100)
-    .createFromCache('q4');
+      .dom(this.player.x - 1500, this.player.y - 750)
+      .createFromCache('q4');
+
+    element4.setOrigin(0.8);
+    element4.setScale(1);
 
     const api_key = '3bad6ce02bbd4c3582a41d972f37338f';
-      const base_url = 'https://api.rawg.io/api/';
-      const endpoint = 'games';
-      const resultsPerPage = 10;
+    const base_url = 'https://api.rawg.io/api/';
+    const endpoint = 'games';
+    const resultsPerPage = 10;
 
+    axios
+      .get(
+        `${base_url}${endpoint}?key=${api_key}&ordering=-recommendations_count&page_size=${resultsPerPage}&metacritic`
+      )
+      .then((response) => {
+        console.log(response.data);
+        const games = response.data.results;
 
-        axios.get(`${base_url}${endpoint}?key=${api_key}&ordering=-recommendations_count&page_size=${resultsPerPage}&metacritic`)
-        .then((response) => {
-          console.log(response.data);
-          for(var i=0; i<result.length; i++){
-              const image = document.createElement('img');
-              image.src = response.data.results[i].background_image;
-              element4.node.appendChild(image);
-            }
-           
-          }
+        const gameContainer = document.createElement('div');
+        gameContainer.classList.add('game-container');
 
-         
-         
-        )
-        .catch((error) => {
-          console.error('API 요청 중 오류 발생:', error);
-        });
-    
+        for (var i = 0; i < Math.min(result.length, 9); i++) {
+          const game = games[result[i]];
 
-    
+          const gameTitle = game.name;
+          const gameImage = game.background_image;
+
+          const gameItem = document.createElement('div');
+          gameItem.classList.add('game-item');
+
+          const imgElement = document.createElement('img');
+          imgElement.src = gameImage;
+          imgElement.alt = gameTitle;
+          gameItem.appendChild(imgElement);
+
+          const gameInfo = document.createElement('p');
+          gameInfo.innerHTML = `<strong>${gameTitle}</strong>`;
+          gameItem.appendChild(gameInfo);
+
+          gameContainer.appendChild(gameItem);
+        }
+
+        element4.node.appendChild(gameContainer);
+      })
+      .catch((error) => {
+        console.error('API 요청 중 오류 발생:', error);
+      });
   }
   update(time: number, delta: number): void {
     // game loop
@@ -508,23 +534,23 @@ export class GameScene extends Phaser.Scene {
         .createFromCache('q1');
 
       const button1 = document.createElement('button');
-      button1.innerText = '혼자가좋아';
+      button1.innerText = 'Singleplayer가좋아';
       button1.style.width = '100px';
       button1.style.height = '50px';
       button1.style.fontSize = '18px';
       element1.node.appendChild(button1);
 
       const button2 = document.createElement('button');
-      button2.innerText = '게임은같이';
+      button2.innerText = '게임은multiplayer';
       button2.style.width = '100px';
       button2.style.height = '50px';
       button2.style.fontSize = '18px';
       element1.node.appendChild(button2);
 
       button1.addEventListener('click', () => {
-        //혼자선택시
+        //Singleplayer선택시
         element1.destroy();
-        this.selectedValues.push('혼자');
+        this.selectedValues.push('Singleplayer');
         this.player.anims.play('idle_left', true);
         this.tweens.add({
           targets: this.player,
@@ -549,9 +575,9 @@ export class GameScene extends Phaser.Scene {
       });
 
       button2.addEventListener('click', () => {
-        //게임은 같이 선택시
+        //게임은 multiplayer 선택시
         element1.destroy();
-        this.selectedValues.push('같이');
+        this.selectedValues.push('multiplayer');
         this.player.anims.play('idle_right', true);
         this.tweens.add({
           targets: this.player,

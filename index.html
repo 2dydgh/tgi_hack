@@ -7,35 +7,27 @@
 
     <style>
       html {
-        font-size: 15px;
+        font-size: 20px;
+        margin: 0;
+        padding: 0;
       }
       img {
-        display: block;
-        height: 250px;
-        width: 250px;
+        width: 50%;
+        height: 85%;
+      }
+      .game-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+      .game-item {
+        width: calc(50%);
+        box-sizing: border-box;
       }
     </style>
   </head>
   <body>
-    <h1>Game Recommendations</h1>
-
-    <p>게임 카테고리를 선택하세요:</p>
-    <select id="category">
-      <option value="rpg">RPG</option>
-      <option value="action">Action</option>
-      <option value="fps">FPS</option>
-    </select>
-
-    <p>플레이 유형을 선택하세요:</p>
-    <select id="playtype">
-      <option value="singleplayer">Singleplayer</option>
-      <option value="multiplayer">Multiplayer</option>
-    </select>
-
-    <button id="recommend-button">게임 추천받기</button>
-    <div id="recommendations"></div>
-
     <script type="module" src="/index.ts"></script>
-
   </body>
 </html>
